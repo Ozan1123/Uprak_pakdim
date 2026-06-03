@@ -1,113 +1,97 @@
-# TokoKu API
-
-Backend API untuk platform e-commerce **TokoKu**, dibangun dengan **Laravel** dan autentikasi **Laravel Sanctum**.
-
----
-
-## Daftar Isi
-
-- [Informasi Umum](#informasi-umum)
-- [Tech Stack](#tech-stack)
-- [Database Schema](#database-schema)
-- [Instalasi](#instalasi)
-- [Format Respons](#format-respons)
-- [Autentikasi](#autentikasi)
-- [Endpoint API](#endpoint-api)
-  - [Auth](#auth)
-  - [Kategori](#kategori)
-  - [Produk](#produk)
-  - [Pesanan (Orders)](#pesanan-orders)
-- [Fitur Bonus](#fitur-bonus)
+<p align="center">
+  <h1 align="center">🛒 TokoKu API</h1>
+  <p align="center">
+    <strong>Backend RESTful API untuk Platform E-Commerce</strong>
+  </p>
+  <p align="center">
+    Dibangun dengan Laravel 12 &bull; Diamankan dengan Laravel Sanctum
+  </p>
+</p>
 
 ---
 
-## Informasi Umum
+## 🚀 Tentang Proyek
 
-| Item | Detail |
+**TokoKu API** adalah backend RESTful API untuk platform e-commerce sederhana yang dikembangkan sebagai proyek Ujian Praktik. API ini menyediakan layanan lengkap mulai dari autentikasi pengguna berbasis token, manajemen katalog (kategori & produk), hingga sistem transaksi pesanan yang terintegrasi dengan manajemen stok otomatis.
+
+### ✨ Fitur Utama
+
+| Fitur | Deskripsi |
 |---|---|
-| Base URL | `http://localhost:8000/api` |
-| Format | JSON |
-| Header wajib | `Accept: application/json` |
-| Autentikasi | Bearer Token (Laravel Sanctum) |
+| 🔐 **Autentikasi Token** | Register, Login, Logout, dan Profile menggunakan Laravel Sanctum |
+| 📂 **Manajemen Kategori** | CRUD kategori dengan proteksi relasi terhadap produk |
+| 📦 **Manajemen Produk** | CRUD produk dengan dukungan pagination dan validasi input |
+| 🛍️ **Sistem Pesanan** | Pembuatan order dengan `DB::transaction`, pengecekan & pemotongan stok otomatis, serta kalkulasi total harga |
+| 🔒 **Proteksi Route** | Endpoint sensitif dilindungi middleware `auth:sanctum` |
+| 📄 **Konsistensi Response** | Seluruh endpoint mengembalikan format JSON yang seragam |
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- **Framework**: Laravel (latest)
-- **Autentikasi**: Laravel Sanctum
-- **Database**: MySQL
-- **Testing**: Postman
-
----
-
-## Database Schema
-
-### `users`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | PK | Primary key |
-| name | string | Nama pengguna |
-| email | string | Email (unique) |
-| password | string (hashed) | Password terenkripsi |
-| created_at | timestamp | |
-
-### `categories`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | PK | Primary key |
-| name | string | Nama kategori |
-| slug | string | Slug URL-friendly |
-| description | text | Deskripsi kategori |
-| created_at | timestamp | |
-
-### `products`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | PK | Primary key |
-| category_id | FK | Relasi ke `categories` |
-| name | string | Nama produk |
-| slug | string | Slug URL-friendly |
-| description | text | Deskripsi produk |
-| price | decimal | Harga produk |
-| stock | integer | Jumlah stok |
-| is_active | boolean | Status aktif produk |
-| created_at | timestamp | |
-
-### `orders`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | PK | Primary key |
-| user_id | FK | Relasi ke `users` |
-| total_price | decimal | Total harga pesanan |
-| status | enum | `pending` / `processing` / `done` / `cancelled` |
-| notes | text | Catatan pesanan |
-| created_at | timestamp | |
-
-### `order_items`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | PK | Primary key |
-| order_id | FK | Relasi ke `orders` |
-| product_id | FK | Relasi ke `products` |
-| quantity | integer | Jumlah item |
-| unit_price | decimal | Harga satuan saat order |
+| Teknologi | Versi / Detail |
+|---|---|
+| **Framework** | Laravel 12 (laravel/framework `^13.8`) |
+| **Bahasa** | PHP `^8.3` |
+| **Autentikasi** | Laravel Sanctum `^4.3` |
+| **Database** | MySQL |
+| **Testing Tool** | Postman (20 skenario endpoint) |
+| **Version Control** | Git & GitHub |
+| **Local Server** | Laragon |
 
 ---
 
-## Instalasi
+## 👥 Tim Pengembang & Kontribusi
+
+Proyek ini dikembangkan secara kolaboratif oleh **7 anggota tim** dengan pembagian tanggung jawab yang jelas:
+
+| No | Nama | Peran | Tanggung Jawab |
+|:---:|---|---|---|
+| 1 | **Fauzan** | Backend Lead | Bertanggung jawab atas arsitektur keamanan aplikasi menggunakan Laravel Sanctum, termasuk pembuatan `AuthController` yang menangani fitur Register, Login, Logout, dan Profile. |
+| 2 | **Desi** | Database Architect | Merancang seluruh struktur database, membuat file Migration untuk setiap tabel, mendefinisikan relasi antar Eloquent Model, serta menyiapkan Database Seeder untuk data dummy. |
+| 3 | **Awa** | API Developer — Catalog | Membangun `CategoryController` untuk pengelolaan etalase kategori toko, termasuk validasi input dan proteksi penghapusan kategori yang masih memiliki produk. |
+| 4 | **Rahman** | API Developer — Product | Membangun `ProductController` dengan fitur CRUD lengkap, dukungan pagination, serta validasi data produk pada setiap operasi. |
+| 5 | **Yanuar** | API Developer — Transaction | Membangun `OrderController` yang mengimplementasikan `DB::transaction` untuk menjamin atomicity pada proses pengecekan stok, pemotongan stok, kalkulasi total harga, dan pencatatan pesanan. |
+| 6 | **Quin** | DevOps & Integration | Menginisiasi proyek Laravel, mengelola repositori Git, menyelesaikan merge conflict antar branch, dan menyatukan seluruh modul kode menjadi satu kesatuan yang fungsional. |
+| 7 | **Rehan** | QA Engineer | Melakukan pengujian menyeluruh terhadap **20 skenario endpoint** menggunakan Postman, menerapkan script auto-token untuk otomatisasi header, dan mendokumentasikan seluruh hasil pengujian API. |
+
+---
+
+## ⚙️ Panduan Instalasi Lokal
+
+### Prasyarat
+
+Pastikan sistem Anda telah terinstal:
+
+- **PHP** ≥ 8.3
+- **Composer** ≥ 2.x
+- **MySQL** ≥ 8.x
+- **Git**
+
+### Langkah-Langkah Instalasi
+
+**1. Clone Repositori**
 
 ```bash
-# 1. Buat proyek Laravel
-composer create-project laravel/laravel tokoku-api
-cd tokoku-api
+git clone https://github.com/username/Api_Ecomers.git
+cd Api_Ecomers
+```
 
-# 2. Install Laravel Sanctum
-composer require laravel/sanctum
-php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
-php artisan migrate
+**2. Install Dependensi PHP**
 
-# 3. Konfigurasi .env
+```bash
+composer install
+```
+
+**3. Konfigurasi Environment**
+
+```bash
+cp .env.example .env
+```
+
+Buka file `.env` dan sesuaikan konfigurasi database:
+
+```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
@@ -116,692 +100,190 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-Tambahkan `HasApiTokens` pada model `User`:
+**4. Generate Application Key**
 
-```php
-// app/Models/User.php
-use Laravel\Sanctum\HasApiTokens;
+```bash
+php artisan key:generate
+```
 
-class User extends Authenticatable
-{
-    use HasApiTokens, HasFactory, Notifiable;
-}
+**5. Jalankan Migrasi & Seeder**
+
+```bash
+php artisan migrate --seed
+```
+
+> Perintah ini akan membuat seluruh tabel yang dibutuhkan dan mengisi data dummy (users, categories, products, orders, dan order items).
+
+**6. Jalankan Server Lokal**
+
+```bash
+php artisan serve
+```
+
+Aplikasi akan berjalan di `http://localhost:8000`.
+
+---
+
+## 📡 Ringkasan Endpoint API
+
+> **Base URL:** `http://localhost:8000/api`
+>
+> 🔓 = Public (tanpa token) &nbsp;&nbsp;|&nbsp;&nbsp; 🔐 = Protected (memerlukan Bearer Token)
+
+### 🔑 Authentication
+
+| Method | Endpoint | Akses | Deskripsi |
+|:---:|---|:---:|---|
+| `POST` | `/auth/register` | 🔓 | Mendaftarkan pengguna baru |
+| `POST` | `/auth/login` | 🔓 | Login dan mendapatkan access token |
+| `POST` | `/auth/logout` | 🔐 | Logout dan menghapus token aktif |
+| `GET` | `/auth/profile` | 🔐 | Mengambil data profil pengguna |
+
+### 📂 Categories
+
+| Method | Endpoint | Akses | Deskripsi |
+|:---:|---|:---:|---|
+| `GET` | `/categories` | 🔓 | Mengambil seluruh daftar kategori |
+| `GET` | `/categories/{id}` | 🔓 | Mengambil detail kategori beserta produknya |
+| `POST` | `/categories` | 🔐 | Membuat kategori baru |
+| `PUT` | `/categories/{id}` | 🔐 | Memperbarui data kategori |
+| `DELETE` | `/categories/{id}` | 🔐 | Menghapus kategori (gagal jika memiliki produk) |
+
+### 📦 Products
+
+| Method | Endpoint | Akses | Deskripsi |
+|:---:|---|:---:|---|
+| `GET` | `/products` | 🔓 | Mengambil daftar produk (dengan pagination) |
+| `GET` | `/products/{id}` | 🔓 | Mengambil detail produk |
+| `POST` | `/products` | 🔐 | Menambahkan produk baru |
+| `PUT` | `/products/{id}` | 🔐 | Memperbarui data produk |
+| `DELETE` | `/products/{id}` | 🔐 | Menghapus produk |
+
+### 🛍️ Orders
+
+| Method | Endpoint | Akses | Deskripsi |
+|:---:|---|:---:|---|
+| `GET` | `/orders` | 🔐 | Mengambil daftar pesanan milik user |
+| `POST` | `/orders` | 🔐 | Membuat pesanan baru (otomatis cek & potong stok) |
+| `GET` | `/orders/{id}` | 🔐 | Mengambil detail pesanan (hanya milik user) |
+| `PATCH` | `/orders/{id}/status` | 🔐 | Memperbarui status pesanan (`pending`, `processing`, `done`, `cancelled`) |
+
+---
+
+## 🔐 Autentikasi
+
+TokoKu API menggunakan **Laravel Sanctum** dengan mekanisme **Bearer Token**. Untuk mengakses endpoint yang dilindungi (🔐), sertakan header berikut pada setiap request:
+
+```
+Authorization: Bearer {your-access-token}
+```
+
+**Alur autentikasi:**
+
+```
+Register/Login  →  Dapatkan Token  →  Gunakan Token di Header  →  Akses Endpoint Protected
 ```
 
 ---
 
-## Format Respons
+## 📁 Struktur Proyek
 
-Semua respons API menggunakan format JSON standar berikut:
-
-**Sukses**
-```json
-{
-  "success": true,
-  "message": "Data berhasil diambil",
-  "data": { }
-}
 ```
-
-**Gagal / Error**
-```json
-{
-  "success": false,
-  "message": "Produk tidak ditemukan",
-  "errors": { }
-}
+Api_Ecomers/
+├── app/
+│   ├── Http/Controllers/Api/
+│   │   ├── AuthController.php        # Autentikasi (Register, Login, Logout, Profile)
+│   │   ├── CategoryController.php    # CRUD Kategori
+│   │   ├── ProductController.php     # CRUD Produk
+│   │   └── OrderController.php       # Manajemen Pesanan & Transaksi
+│   └── Models/
+│       ├── User.php                  # Model pengguna dengan Sanctum trait
+│       ├── Category.php              # Model kategori (hasMany products)
+│       ├── Product.php               # Model produk (belongsTo category)
+│       ├── Order.php                 # Model pesanan (belongsTo user, hasMany items)
+│       └── OrderItem.php             # Model item pesanan (belongsTo order & product)
+├── database/
+│   ├── migrations/                   # Skema tabel database
+│   └── seeders/                      # Data dummy untuk testing
+├── routes/
+│   └── api.php                       # Definisi seluruh route API
+└── ...
 ```
 
 ---
 
-## Autentikasi
+## 📜 Contoh Request & Response
 
-API ini menggunakan **Laravel Sanctum** dengan mekanisme **Bearer Token**.
+### Register
 
-Untuk endpoint yang membutuhkan autentikasi, sertakan header berikut:
+**Request:**
 
-```
-Authorization: Bearer <token>
-```
+```http
+POST /api/auth/register
+Content-Type: application/json
 
-Token didapatkan setelah melakukan request login yang berhasil.
-
----
-
-## Endpoint API
-
-### Auth
-
-#### `POST /auth/register`
-
-Registrasi pengguna baru.
-
-- **Auth**: Tidak diperlukan
-
-**Request Body**
-```json
 {
-  "name": "Budi Santoso",
-  "email": "budi@example.com",
-  "password": "password123",
-  "password_confirmation": "password123"
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
 }
 ```
 
-**Response `201 Created`**
+**Response (201 Created):**
+
 ```json
 {
-  "success": true,
-  "message": "Registrasi berhasil",
-  "data": {
-    "user": {
-      "id": 1,
-      "name": "Budi Santoso",
-      "email": "budi@example.com"
-    },
-    "token": "1|abcdefghijklmnopqrstuvwxyz1234567890"
-  }
-}
-```
-
-**Response `422 Unprocessable Entity`** — validasi gagal (misal email sudah terdaftar)
-
----
-
-#### `POST /auth/login`
-
-Login dan mendapatkan Bearer Token Sanctum.
-
-- **Auth**: Tidak diperlukan
-
-**Request Body**
-```json
-{
-  "email": "budi@example.com",
-  "password": "password123"
-}
-```
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Login berhasil",
-  "data": {
-    "user": {
-      "id": 1,
-      "name": "Budi Santoso",
-      "email": "budi@example.com"
-    },
-    "token": "1|abcdefghijklmnopqrstuvwxyz1234567890"
-  }
-}
-```
-
-**Response `401 Unauthorized`** — kredensial salah
-
----
-
-#### `POST /auth/logout`
-
-Logout dan mencabut token aktif.
-
-- **Auth**: ✅ Diperlukan
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Logout berhasil",
-  "data": null
-}
-```
-
-**Response `401 Unauthorized`** — token tidak valid atau sudah dicabut
-
----
-
-#### `GET /auth/profile`
-
-Melihat data profil pengguna yang sedang login.
-
-- **Auth**: ✅ Diperlukan
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Data profil berhasil diambil",
-  "data": {
-    "id": 1,
-    "name": "Budi Santoso",
-    "email": "budi@example.com",
-    "created_at": "2025-01-01T00:00:00.000000Z"
-  }
-}
-```
-
-**Response `401 Unauthorized`** — tanpa token
-
----
-
-### Kategori
-
-#### `GET /categories`
-
-Menampilkan semua kategori.
-
-- **Auth**: Tidak diperlukan
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Data kategori berhasil diambil",
-  "data": [
-    {
-      "id": 1,
-      "name": "Elektronik",
-      "slug": "elektronik",
-      "description": "Produk elektronik dan gadget"
+    "success": true,
+    "message": "Registrasi berhasil.",
+    "data": {
+        "user": {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@example.com"
+        },
+        "token": "1|abc123..."
     }
-  ]
 }
 ```
 
----
+### Buat Pesanan
 
-#### `POST /categories`
+**Request:**
 
-Membuat kategori baru.
+```http
+POST /api/orders
+Authorization: Bearer {token}
+Content-Type: application/json
 
-- **Auth**: ✅ Diperlukan
-
-**Request Body**
-```json
 {
-  "name": "Elektronik",
-  "description": "Produk elektronik dan gadget"
-}
-```
-
-**Response `201 Created`**
-```json
-{
-  "success": true,
-  "message": "Kategori berhasil dibuat",
-  "data": {
-    "id": 1,
-    "name": "Elektronik",
-    "slug": "elektronik",
-    "description": "Produk elektronik dan gadget"
-  }
-}
-```
-
-**Response `401 Unauthorized`** — tanpa token  
-**Response `422 Unprocessable Entity`** — validasi gagal
-
----
-
-#### `GET /categories/{id}`
-
-Menampilkan detail kategori beserta daftar produknya.
-
-- **Auth**: Tidak diperlukan
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Detail kategori berhasil diambil",
-  "data": {
-    "id": 1,
-    "name": "Elektronik",
-    "slug": "elektronik",
-    "description": "Produk elektronik dan gadget",
-    "products": [
-      {
-        "id": 1,
-        "name": "Laptop Gaming",
-        "price": "15000000.00",
-        "stock": 10,
-        "is_active": true
-      }
-    ]
-  }
-}
-```
-
-**Response `404 Not Found`** — ID tidak ditemukan
-
----
-
-#### `PUT /categories/{id}`
-
-Memperbarui data kategori.
-
-- **Auth**: ✅ Diperlukan
-
-**Request Body**
-```json
-{
-  "name": "Elektronik & Gadget",
-  "description": "Produk elektronik, gadget, dan aksesoris"
-}
-```
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Kategori berhasil diperbarui",
-  "data": {
-    "id": 1,
-    "name": "Elektronik & Gadget",
-    "slug": "elektronik-gadget",
-    "description": "Produk elektronik, gadget, dan aksesoris"
-  }
-}
-```
-
-**Response `401 Unauthorized`** — tanpa token  
-**Response `422 Unprocessable Entity`** — data kosong / tidak valid  
-**Response `404 Not Found`** — ID tidak ditemukan
-
----
-
-#### `DELETE /categories/{id}`
-
-Menghapus kategori. Gagal jika kategori masih memiliki produk.
-
-- **Auth**: ✅ Diperlukan
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Kategori berhasil dihapus",
-  "data": null
-}
-```
-
-**Response `400 Bad Request`** — kategori masih memiliki produk  
-**Response `401 Unauthorized`** — tanpa token  
-**Response `404 Not Found`** — ID tidak ditemukan
-
----
-
-### Produk
-
-#### `GET /products`
-
-Menampilkan semua produk aktif dengan pagination.
-
-- **Auth**: Tidak diperlukan
-- **Query Params (Bonus)**:
-  - `search` — filter berdasarkan nama produk (contoh: `?search=laptop`)
-  - `category_id` — filter berdasarkan kategori (contoh: `?category_id=1`)
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Data produk berhasil diambil",
-  "data": {
-    "current_page": 1,
-    "data": [
-      {
-        "id": 1,
-        "name": "Laptop Gaming",
-        "slug": "laptop-gaming",
-        "description": "Laptop untuk gaming performa tinggi",
-        "price": "15000000.00",
-        "stock": 10,
-        "is_active": true,
-        "category": {
-          "id": 1,
-          "name": "Elektronik"
-        }
-      }
-    ],
-    "per_page": 15,
-    "total": 50
-  }
-}
-```
-
----
-
-#### `POST /products`
-
-Membuat produk baru.
-
-- **Auth**: ✅ Diperlukan
-
-**Request Body**
-```json
-{
-  "category_id": 1,
-  "name": "Laptop Gaming",
-  "description": "Laptop untuk gaming performa tinggi",
-  "price": 15000000,
-  "stock": 10
-}
-```
-
-**Response `201 Created`**
-```json
-{
-  "success": true,
-  "message": "Produk berhasil dibuat",
-  "data": {
-    "id": 1,
-    "category_id": 1,
-    "name": "Laptop Gaming",
-    "slug": "laptop-gaming",
-    "description": "Laptop untuk gaming performa tinggi",
-    "price": "15000000.00",
-    "stock": 10,
-    "is_active": true
-  }
-}
-```
-
-**Response `401 Unauthorized`** — tanpa token  
-**Response `422 Unprocessable Entity`** — validasi gagal
-
----
-
-#### `GET /products/{id}`
-
-Menampilkan detail produk beserta informasi kategori.
-
-- **Auth**: Tidak diperlukan
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Detail produk berhasil diambil",
-  "data": {
-    "id": 1,
-    "name": "Laptop Gaming",
-    "slug": "laptop-gaming",
-    "description": "Laptop untuk gaming performa tinggi",
-    "price": "15000000.00",
-    "stock": 10,
-    "is_active": true,
-    "category": {
-      "id": 1,
-      "name": "Elektronik",
-      "slug": "elektronik"
-    }
-  }
-}
-```
-
-**Response `404 Not Found`** — ID tidak ditemukan
-
----
-
-#### `PUT /products/{id}`
-
-Memperbarui data produk.
-
-- **Auth**: ✅ Diperlukan
-
-**Request Body**
-```json
-{
-  "category_id": 1,
-  "name": "Laptop Gaming Pro",
-  "description": "Laptop gaming edisi terbaru",
-  "price": 18000000,
-  "stock": 5
-}
-```
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Produk berhasil diperbarui",
-  "data": { }
-}
-```
-
-**Response `401 Unauthorized`** — tanpa token  
-**Response `404 Not Found`** — ID tidak ditemukan
-
----
-
-#### `PATCH /products/{id}/toggle`
-
-Mengaktifkan atau menonaktifkan produk (toggle `is_active`).
-
-- **Auth**: ✅ Diperlukan
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Status produk berhasil diubah",
-  "data": {
-    "id": 1,
-    "is_active": false
-  }
-}
-```
-
-**Response `401 Unauthorized`** — tanpa token  
-**Response `404 Not Found`** — ID tidak ditemukan
-
----
-
-#### `DELETE /products/{id}`
-
-Menghapus produk.
-
-- **Auth**: ✅ Diperlukan
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Produk berhasil dihapus",
-  "data": null
-}
-```
-
-**Response `401 Unauthorized`** — tanpa token  
-**Response `404 Not Found`** — ID tidak ditemukan
-
----
-
-### Pesanan (Orders)
-
-#### `GET /orders`
-
-Menampilkan semua pesanan milik user yang sedang login.
-
-- **Auth**: ✅ Diperlukan
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Data pesanan berhasil diambil",
-  "data": [
-    {
-      "id": 1,
-      "total_price": "350000.00",
-      "status": "pending",
-      "notes": "Tolong kirim cepat",
-      "created_at": "2025-01-01T10:00:00.000000Z"
-    }
-  ]
-}
-```
-
-**Response `401 Unauthorized`** — tanpa token
-
----
-
-#### `POST /orders`
-
-Membuat pesanan baru. `total_price` dikalkulasi otomatis dari `unit_price × quantity` setiap item.
-
-- **Auth**: ✅ Diperlukan
-
-**Request Body**
-```json
-{
-  "notes": "Tolong kirim cepat",
-  "items": [
-    { "product_id": 3, "quantity": 2 },
-    { "product_id": 7, "quantity": 1 }
-  ]
-}
-```
-
-**Response `201 Created`**
-```json
-{
-  "success": true,
-  "message": "Pesanan berhasil dibuat",
-  "data": {
-    "id": 12,
-    "user_id": 1,
-    "total_price": "350000.00",
-    "status": "pending",
-    "notes": "Tolong kirim cepat",
+    "notes": "Tolong packing yang rapi",
     "items": [
-      {
-        "product_id": 3,
-        "quantity": 2,
-        "unit_price": "150000.00"
-      },
-      {
-        "product_id": 7,
-        "quantity": 1,
-        "unit_price": "50000.00"
-      }
+        { "product_id": 1, "quantity": 2 },
+        { "product_id": 3, "quantity": 1 }
     ]
-  }
 }
 ```
 
-**Response `400 Bad Request`** — stok produk tidak mencukupi  
-**Response `401 Unauthorized`** — tanpa token  
-**Response `422 Unprocessable Entity`** — validasi gagal
+**Response (201 Created):**
 
----
-
-#### `GET /orders/{id}`
-
-Menampilkan detail pesanan beserta seluruh item-nya. Hanya bisa diakses oleh pemilik pesanan.
-
-- **Auth**: ✅ Diperlukan
-
-**Response `200 OK`**
 ```json
 {
-  "success": true,
-  "message": "Detail pesanan berhasil diambil",
-  "data": {
-    "id": 12,
-    "user_id": 1,
-    "total_price": "350000.00",
-    "status": "pending",
-    "notes": "Tolong kirim cepat",
-    "created_at": "2025-01-01T10:00:00.000000Z",
-    "items": [
-      {
+    "success": true,
+    "message": "Pesanan berhasil dibuat.",
+    "data": {
         "id": 1,
-        "product_id": 3,
-        "quantity": 2,
-        "unit_price": "150000.00",
-        "product": {
-          "id": 3,
-          "name": "Nama Produk"
-        }
-      }
-    ]
-  }
+        "user_id": 1,
+        "total_price": 150000,
+        "status": "pending",
+        "notes": "Tolong packing yang rapi",
+        "items": [...]
+    }
 }
 ```
 
-**Response `401 Unauthorized`** — tanpa token  
-**Response `403 Forbidden`** — pesanan milik user lain  
-**Response `404 Not Found`** — ID tidak ditemukan
-
 ---
 
-#### `PATCH /orders/{id}/status`
-
-Memperbarui status pesanan.
-
-- **Auth**: ✅ Diperlukan
-
-**Request Body**
-```json
-{
-  "status": "processing"
-}
-```
-
-> Nilai `status` yang valid: `pending`, `processing`, `done`, `cancelled`
-
-**Response `200 OK`**
-```json
-{
-  "success": true,
-  "message": "Status pesanan berhasil diperbarui",
-  "data": {
-    "id": 12,
-    "status": "processing"
-  }
-}
-```
-
-**Response `401 Unauthorized`** — tanpa token  
-**Response `422 Unprocessable Entity`** — nilai status tidak valid  
-**Response `404 Not Found`** — ID tidak ditemukan
-
----
-
-## Ringkasan Endpoint
-
-| Method | Endpoint | Auth | Deskripsi |
-|---|---|:---:|---|
-| POST | `/auth/register` | — | Registrasi pengguna baru |
-| POST | `/auth/login` | — | Login, mendapatkan token |
-| POST | `/auth/logout` | ✅ | Logout, cabut token |
-| GET | `/auth/profile` | ✅ | Lihat profil pengguna login |
-| GET | `/categories` | — | Daftar semua kategori |
-| POST | `/categories` | ✅ | Buat kategori baru |
-| GET | `/categories/{id}` | — | Detail kategori + produknya |
-| PUT | `/categories/{id}` | ✅ | Update kategori |
-| DELETE | `/categories/{id}` | ✅ | Hapus kategori |
-| GET | `/products` | — | Daftar produk aktif (pagination) |
-| POST | `/products` | ✅ | Buat produk baru |
-| GET | `/products/{id}` | — | Detail produk + kategori |
-| PUT | `/products/{id}` | ✅ | Update produk |
-| PATCH | `/products/{id}/toggle` | ✅ | Toggle status aktif produk |
-| DELETE | `/products/{id}` | ✅ | Hapus produk |
-| GET | `/orders` | ✅ | Daftar pesanan milik user login |
-| POST | `/orders` | ✅ | Buat pesanan baru |
-| GET | `/orders/{id}` | ✅ | Detail pesanan + item-itemnya |
-| PATCH | `/orders/{id}/status` | ✅ | Update status pesanan |
-
----
-
-## Fitur Bonus
-
-| Fitur | Endpoint |
-|---|---|
-| Pencarian produk | `GET /products?search=nama` |
-| Filter berdasarkan kategori | `GET /products?category_id=1` |
-| Upload foto produk | Laravel Storage |
-| Data dummy (Seeder) | Min. 3 kategori, 10 produk |
+<p align="center">
+  Dibuat dengan ❤️ oleh <strong>Tim TokoKu</strong> — Ujian Praktik 2026
+</p>
