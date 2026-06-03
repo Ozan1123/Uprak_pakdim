@@ -1,58 +1,289 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <h1 align="center">🛒 TokoKu API</h1>
+  <p align="center">
+    <strong>Backend RESTful API untuk Platform E-Commerce</strong>
+  </p>
+  <p align="center">
+    Dibangun dengan Laravel 12 &bull; Diamankan dengan Laravel Sanctum
+  </p>
 </p>
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Tentang Proyek
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**TokoKu API** adalah backend RESTful API untuk platform e-commerce sederhana yang dikembangkan sebagai proyek Ujian Praktik. API ini menyediakan layanan lengkap mulai dari autentikasi pengguna berbasis token, manajemen katalog (kategori & produk), hingga sistem transaksi pesanan yang terintegrasi dengan manajemen stok otomatis.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### ✨ Fitur Utama
 
-## Learning Laravel
+| Fitur | Deskripsi |
+|---|---|
+| 🔐 **Autentikasi Token** | Register, Login, Logout, dan Profile menggunakan Laravel Sanctum |
+| 📂 **Manajemen Kategori** | CRUD kategori dengan proteksi relasi terhadap produk |
+| 📦 **Manajemen Produk** | CRUD produk dengan dukungan pagination dan validasi input |
+| 🛍️ **Sistem Pesanan** | Pembuatan order dengan `DB::transaction`, pengecekan & pemotongan stok otomatis, serta kalkulasi total harga |
+| 🔒 **Proteksi Route** | Endpoint sensitif dilindungi middleware `auth:sanctum` |
+| 📄 **Konsistensi Response** | Seluruh endpoint mengembalikan format JSON yang seragam |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Tech Stack
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+| Teknologi | Versi / Detail |
+|---|---|
+| **Framework** | Laravel 12 (laravel/framework `^13.8`) |
+| **Bahasa** | PHP `^8.3` |
+| **Autentikasi** | Laravel Sanctum `^4.3` |
+| **Database** | MySQL |
+| **Testing Tool** | Postman (20 skenario endpoint) |
+| **Version Control** | Git & GitHub |
+| **Local Server** | Laragon |
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 👥 Tim Pengembang & Kontribusi
+
+Proyek ini dikembangkan secara kolaboratif oleh **7 anggota tim** dengan pembagian tanggung jawab yang jelas:
+
+| No | Nama | Peran | Tanggung Jawab |
+|:---:|---|---|---|
+| 1 | **Fauzan** | Backend Lead | Bertanggung jawab atas arsitektur keamanan aplikasi menggunakan Laravel Sanctum, termasuk pembuatan `AuthController` yang menangani fitur Register, Login, Logout, dan Profile. |
+| 2 | **Desi** | Database Architect | Merancang seluruh struktur database, membuat file Migration untuk setiap tabel, mendefinisikan relasi antar Eloquent Model, serta menyiapkan Database Seeder untuk data dummy. |
+| 3 | **Awa** | API Developer — Catalog | Membangun `CategoryController` untuk pengelolaan etalase kategori toko, termasuk validasi input dan proteksi penghapusan kategori yang masih memiliki produk. |
+| 4 | **Rahman** | API Developer — Product | Membangun `ProductController` dengan fitur CRUD lengkap, dukungan pagination, serta validasi data produk pada setiap operasi. |
+| 5 | **Yanuar** | API Developer — Transaction | Membangun `OrderController` yang mengimplementasikan `DB::transaction` untuk menjamin atomicity pada proses pengecekan stok, pemotongan stok, kalkulasi total harga, dan pencatatan pesanan. |
+| 6 | **Quin** | DevOps & Integration | Menginisiasi proyek Laravel, mengelola repositori Git, menyelesaikan merge conflict antar branch, dan menyatukan seluruh modul kode menjadi satu kesatuan yang fungsional. |
+| 7 | **Rehan** | QA Engineer | Melakukan pengujian menyeluruh terhadap **20 skenario endpoint** menggunakan Postman, menerapkan script auto-token untuk otomatisasi header, dan mendokumentasikan seluruh hasil pengujian API. |
+
+---
+
+## ⚙️ Panduan Instalasi Lokal
+
+### Prasyarat
+
+Pastikan sistem Anda telah terinstal:
+
+- **PHP** ≥ 8.3
+- **Composer** ≥ 2.x
+- **MySQL** ≥ 8.x
+- **Git**
+
+### Langkah-Langkah Instalasi
+
+**1. Clone Repositori**
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/username/Api_Ecomers.git
+cd Api_Ecomers
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+**2. Install Dependensi PHP**
 
-## Contributing
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**3. Konfigurasi Environment**
 
-## Code of Conduct
+```bash
+cp .env.example .env
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Buka file `.env` dan sesuaikan konfigurasi database:
 
-## Security Vulnerabilities
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tokoku_db
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**4. Generate Application Key**
 
-## License
+```bash
+php artisan key:generate
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**5. Jalankan Migrasi & Seeder**
+
+```bash
+php artisan migrate --seed
+```
+
+> Perintah ini akan membuat seluruh tabel yang dibutuhkan dan mengisi data dummy (users, categories, products, orders, dan order items).
+
+**6. Jalankan Server Lokal**
+
+```bash
+php artisan serve
+```
+
+Aplikasi akan berjalan di `http://localhost:8000`.
+
+---
+
+## 📡 Ringkasan Endpoint API
+
+> **Base URL:** `http://localhost:8000/api`
+>
+> 🔓 = Public (tanpa token) &nbsp;&nbsp;|&nbsp;&nbsp; 🔐 = Protected (memerlukan Bearer Token)
+
+### 🔑 Authentication
+
+| Method | Endpoint | Akses | Deskripsi |
+|:---:|---|:---:|---|
+| `POST` | `/auth/register` | 🔓 | Mendaftarkan pengguna baru |
+| `POST` | `/auth/login` | 🔓 | Login dan mendapatkan access token |
+| `POST` | `/auth/logout` | 🔐 | Logout dan menghapus token aktif |
+| `GET` | `/auth/profile` | 🔐 | Mengambil data profil pengguna |
+
+### 📂 Categories
+
+| Method | Endpoint | Akses | Deskripsi |
+|:---:|---|:---:|---|
+| `GET` | `/categories` | 🔓 | Mengambil seluruh daftar kategori |
+| `GET` | `/categories/{id}` | 🔓 | Mengambil detail kategori beserta produknya |
+| `POST` | `/categories` | 🔐 | Membuat kategori baru |
+| `PUT` | `/categories/{id}` | 🔐 | Memperbarui data kategori |
+| `DELETE` | `/categories/{id}` | 🔐 | Menghapus kategori (gagal jika memiliki produk) |
+
+### 📦 Products
+
+| Method | Endpoint | Akses | Deskripsi |
+|:---:|---|:---:|---|
+| `GET` | `/products` | 🔓 | Mengambil daftar produk (dengan pagination) |
+| `GET` | `/products/{id}` | 🔓 | Mengambil detail produk |
+| `POST` | `/products` | 🔐 | Menambahkan produk baru |
+| `PUT` | `/products/{id}` | 🔐 | Memperbarui data produk |
+| `DELETE` | `/products/{id}` | 🔐 | Menghapus produk |
+
+### 🛍️ Orders
+
+| Method | Endpoint | Akses | Deskripsi |
+|:---:|---|:---:|---|
+| `GET` | `/orders` | 🔐 | Mengambil daftar pesanan milik user |
+| `POST` | `/orders` | 🔐 | Membuat pesanan baru (otomatis cek & potong stok) |
+| `GET` | `/orders/{id}` | 🔐 | Mengambil detail pesanan (hanya milik user) |
+| `PATCH` | `/orders/{id}/status` | 🔐 | Memperbarui status pesanan (`pending`, `processing`, `done`, `cancelled`) |
+
+---
+
+## 🔐 Autentikasi
+
+TokoKu API menggunakan **Laravel Sanctum** dengan mekanisme **Bearer Token**. Untuk mengakses endpoint yang dilindungi (🔐), sertakan header berikut pada setiap request:
+
+```
+Authorization: Bearer {your-access-token}
+```
+
+**Alur autentikasi:**
+
+```
+Register/Login  →  Dapatkan Token  →  Gunakan Token di Header  →  Akses Endpoint Protected
+```
+
+---
+
+## 📁 Struktur Proyek
+
+```
+Api_Ecomers/
+├── app/
+│   ├── Http/Controllers/Api/
+│   │   ├── AuthController.php        # Autentikasi (Register, Login, Logout, Profile)
+│   │   ├── CategoryController.php    # CRUD Kategori
+│   │   ├── ProductController.php     # CRUD Produk
+│   │   └── OrderController.php       # Manajemen Pesanan & Transaksi
+│   └── Models/
+│       ├── User.php                  # Model pengguna dengan Sanctum trait
+│       ├── Category.php              # Model kategori (hasMany products)
+│       ├── Product.php               # Model produk (belongsTo category)
+│       ├── Order.php                 # Model pesanan (belongsTo user, hasMany items)
+│       └── OrderItem.php             # Model item pesanan (belongsTo order & product)
+├── database/
+│   ├── migrations/                   # Skema tabel database
+│   └── seeders/                      # Data dummy untuk testing
+├── routes/
+│   └── api.php                       # Definisi seluruh route API
+└── ...
+```
+
+---
+
+## 📜 Contoh Request & Response
+
+### Register
+
+**Request:**
+
+```http
+POST /api/auth/register
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+}
+```
+
+**Response (201 Created):**
+
+```json
+{
+    "success": true,
+    "message": "Registrasi berhasil.",
+    "data": {
+        "user": {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@example.com"
+        },
+        "token": "1|abc123..."
+    }
+}
+```
+
+### Buat Pesanan
+
+**Request:**
+
+```http
+POST /api/orders
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+    "notes": "Tolong packing yang rapi",
+    "items": [
+        { "product_id": 1, "quantity": 2 },
+        { "product_id": 3, "quantity": 1 }
+    ]
+}
+```
+
+**Response (201 Created):**
+
+```json
+{
+    "success": true,
+    "message": "Pesanan berhasil dibuat.",
+    "data": {
+        "id": 1,
+        "user_id": 1,
+        "total_price": 150000,
+        "status": "pending",
+        "notes": "Tolong packing yang rapi",
+        "items": [...]
+    }
+}
+```
+
+---
+
+<p align="center">
+  Dibuat dengan ❤️ oleh <strong>Tim TokoKu</strong> — Ujian Praktik 2026
+</p>
