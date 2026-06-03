@@ -73,7 +73,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Login berhasil.',
+            'message' => 'Login berhasil',
             'data' => [
                 'user' => $user,
                 'token' => $token,

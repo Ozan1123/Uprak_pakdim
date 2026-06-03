@@ -24,9 +24,11 @@ class ProductController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        return response()->json(
-            $query->paginate(10)
-        );
+        return response()->json([
+            'success' => true,
+            'message' => 'Data produk berhasil diambil',
+            'data' => $query->paginate(10)
+        ]);
     }
 
     /**
@@ -52,9 +54,10 @@ class ProductController extends Controller
         ]);
 
         return response()->json([
+            'success' => true,
             'message' => 'Product created successfully',
             'data' => $product
-        ]);
+        ], 201);
     }
 
     /**
@@ -62,10 +65,21 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $product = Product::with('category')
-            ->findOrFail($id);
+        $product = Product::with('category')->find($id);
 
-        return response()->json($product);
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found',
+                'data' => null
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail produk berhasil diambil',
+            'data' => $product
+        ]);
     }
 
     /**
@@ -73,7 +87,15 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found',
+                'data' => null
+            ], 404);
+        }
 
         $request->validate([
             'category_id' => 'required',
@@ -92,6 +114,7 @@ class ProductController extends Controller
         ]);
 
         return response()->json([
+            'success' => true,
             'message' => 'Product updated successfully',
             'data' => $product
         ]);
@@ -102,13 +125,21 @@ class ProductController extends Controller
      */
     public function toggle(string $id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found',
+                'data' => null
+            ], 404);
+        }
 
         $product->is_active = !$product->is_active;
-
         $product->save();
 
         return response()->json([
+            'success' => true,
             'message' => 'Status updated successfully',
             'data' => $product
         ]);
@@ -119,12 +150,22 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found',
+                'data' => null
+            ], 404);
+        }
 
         $product->delete();
 
         return response()->json([
-            'message' => 'Product deleted successfully'
+            'success' => true,
+            'message' => 'Product deleted successfully',
+            'data' => null
         ]);
     }
 }

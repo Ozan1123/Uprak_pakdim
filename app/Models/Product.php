@@ -19,6 +19,12 @@ class Product extends Model
         'is_active'
     ];
     
+    protected $casts = [
+        'is_active' => 'boolean',
+        'price' => 'float',
+        'stock' => 'integer',
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class);
