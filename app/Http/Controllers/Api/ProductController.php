@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Product;
 
 class ProductController extends Controller
@@ -11,11 +12,21 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate(10);
+        $query = Product::with('category');
 
-        return response()->json($products);
+        if ($request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->category_id) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        return response()->json(
+            $query->paginate(10)
+        );
     }
 
     /**
@@ -26,7 +37,6 @@ class ProductController extends Controller
         $request->validate([
             'category_id' => 'required',
             'name' => 'required',
-            'slug' => 'required|unique:products',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
         ]);
@@ -34,7 +44,7 @@ class ProductController extends Controller
         $product = Product::create([
             'category_id' => $request->category_id,
             'name' => $request->name,
-            'slug' => $request->slug,
+            'slug' => Str::slug($request->name),
             'description' => $request->description,
             'price' => $request->price,
             'stock' => $request->stock,
@@ -52,7 +62,8 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with('category')
+            ->findOrFail($id);
 
         return response()->json($product);
     }
@@ -74,7 +85,7 @@ class ProductController extends Controller
         $product->update([
             'category_id' => $request->category_id,
             'name' => $request->name,
-            'slug' => $request->slug,
+            'slug' => Str::slug($request->name),
             'description' => $request->description,
             'price' => $request->price,
             'stock' => $request->stock,
@@ -82,6 +93,23 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Product updated successfully',
+            'data' => $product
+        ]);
+    }
+
+    /**
+     * Toggle active status.
+     */
+    public function toggle(string $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $product->is_active = !$product->is_active;
+
+        $product->save();
+
+        return response()->json([
+            'message' => 'Status updated successfully',
             'data' => $product
         ]);
     }
